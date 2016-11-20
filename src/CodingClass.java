@@ -61,7 +61,7 @@ public class CodingClass {
         byteFreqMap2.putAll(byteFreqMap);
     }
 
-    public void printFreqTable(){
+    public void printFreqTable(String filePath){
         System.out.println("freq table");
 
         int sum = 0;
@@ -71,11 +71,12 @@ public class CodingClass {
 
         FileWriter fileWriter = null;
         try {
-            fileWriter = new FileWriter(new File("C:\\Users\\Evgenia\\IdeaProjects\\OTIKLab2_3\\symFreq\\" + fileName), true);
+            fileWriter = new FileWriter(new File(filePath + "\\" + fileName), true);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        double wholeCountInf = 0;
 
         while (!byteFreqMap2.isEmpty()) {
 
@@ -88,13 +89,25 @@ public class CodingClass {
                     b = entry.getKey();
                 }
             }
+            double freq = maxVal/sum;
+            double inf = (Math.log10(freq)/Math.log10(2)*(-1));
             try {
-                fileWriter.append(Integer.toHexString(Byte.toUnsignedInt(b[0])) + "---" + maxVal/sum + "\n");
+                fileWriter.append(Integer.toHexString(Byte.toUnsignedInt(b[0])) + "---" + freq + " inf : "
+                        + inf
+                        + "\n" );
                 fileWriter.flush();
+                wholeCountInf += maxVal*inf;
             } catch (IOException e) {
                 e.printStackTrace();
             }
             byteFreqMap2.remove(b);
+        }
+
+        try {
+            fileWriter.append("количество информации : " + wholeCountInf);
+            fileWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
